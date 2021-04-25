@@ -78,3 +78,12 @@ where customers.id = orders.customer_id
 group by customer_id
 order by position;
 
+
+/*
+Question 6: What is the most popular product (by number of purchases)?
+*/
+
+select product_title, count(id) as sales
+from hiring.orders
+group by product_title
+order by sales desc limit 1;
