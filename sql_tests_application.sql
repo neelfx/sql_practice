@@ -97,3 +97,46 @@ select product_title, round(avg(value),2) as average_price
 from hiring.orders
 group by product_title
 order by average_price desc;
+
+
+
+/*
+Question 8: Only considering customers who have made multiple purchases, what is
+the average time between orders in days?
+
+Answer: 6.39 days ?
+*/
+
+-- get average delay for all customers who have ordered more than once
+select round(avg(delay_days),2) as overall_delay_average
+from(
+    -- select customers and their average delay between orders (absolute number in days)
+    select customer_id, round(abs(avg(date_diff(created_at, previous, day))),2) as delay_days
+    from (
+        -- select orders's customer id, date ordered and then previous order by same customer
+        select customer_id, created_at,  lag(created_at, 1) over (order by customer_id asc) as previous, 
+        from hiring.orders
+        -- where customers have placed more than order
+        where customer_id in (
+            select customer_id
+            from hiring.orders as orders
+            group by customer_id
+            having count(customer_id) > 1 )
+        order by customer_id, created_at asc, previous asc )
+    group by customer_id
+    );
+
+select round(avg(delay_days),2) as overall_delay_average
+from(
+    -- select customers and their average delay between orders (absolute number in days)
+    select customer_id, round(abs(avg(date_diff(created_at, previous, day))),2) as delay_days
+    from (
+        -- select order's customer id, date ordered and then previous order by same customer
+        select customer_id, created_at,  lag(created_at, 1) over (order by customer_id asc) as previous, 
+        from hiring.orders
+        -- where customers have placed more than 1 order
+        having count(customer_id) > 1 )
+        order by customer_id, created_at asc, previous asc )
+    group by customer_id
+    );	
+	
