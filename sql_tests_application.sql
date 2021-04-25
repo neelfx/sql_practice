@@ -36,3 +36,21 @@ from hiring.cities as cities
 left join hiring.customers as customers on cities.id = customers.city_id
 group by city
 order by customer_number desc;
+
+/*
+Question 4: What city has generated the most revenue for the company? (note: the SQL query can contain the revenue for all cities)
+Answer: Sheffield
+*/
+select cities.name as city, round(sum(orders.value),2) as total_revenue
+from hiring.cities as cities
+left join hiring.customers as customers on cities.id = customers.city_id
+left join hiring.orders as orders on customers.id = orders.customer_id
+group by city
+order by total_revenue desc;
+
+-- OR
+select cities.name as city, round(sum(orders.value),2) as total_revenue
+from hiring.cities as cities, hiring.customers as customers, hiring.orders as orders
+where cities.id = customers.city_id and customers.id = orders.customer_id
+group by city
+order by total_revenue desc;
