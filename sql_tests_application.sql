@@ -54,3 +54,27 @@ from hiring.cities as cities, hiring.customers as customers, hiring.orders as or
 where cities.id = customers.city_id and customers.id = orders.customer_id
 group by city
 order by total_revenue desc;
+
+
+
+/*
+Question 5: Return a list of customers with how much they have spent at the company.
+The list should be sorted in descending order (with the customer who
+spent the most the first result, and the customer who spent the least the
+last result). We want to see three columns (customer_id, revenue, their
+position in the list).
+*/
+select customers.id as customer_id, round(sum(orders.value),2) as revenue, rank() over (order by sum(orders.value) desc) position
+from hiring.customers as customers
+left join hiring.orders as orders on customers.id = orders.customer_id
+group by customer_id
+order by position;
+
+-- OR
+
+select customers.id as customer_id, round(sum(orders.value),2) as revenue, rank() over (order by sum(orders.value) desc) position
+from hiring.customers as customers, hiring.orders as orders
+where customers.id = orders.customer_id
+group by customer_id
+order by position;
+
