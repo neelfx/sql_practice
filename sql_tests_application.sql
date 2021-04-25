@@ -87,3 +87,13 @@ select product_title, count(id) as sales
 from hiring.orders
 group by product_title
 order by sales desc limit 1;
+
+
+/*
+Question 7: What is the average price of each product?
+*/
+
+select product_title, round(avg(value),2) as average_price
+from hiring.orders
+group by product_title
+order by average_price desc;
