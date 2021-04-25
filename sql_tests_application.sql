@@ -140,3 +140,12 @@ from(
     group by customer_id
     );	
 	
+
+/*
+Question 9: Select all the customers who have the pattern “an” in their first name (e.g.
+Jane) OR the pattern “is” in their first name (e.g. Elise) AND their email ends
+in “.com” (e.g. myemail@google.com).
+*/
+select *
+from hiring.customers
+where (first_name like '%an%' or first_name like '%is') and email like '%.com';
